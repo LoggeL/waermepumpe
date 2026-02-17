@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Navigation from '@/components/Navigation'
 import DashboardCards from '@/components/DashboardCards'
 import SolarForecast from '@/components/SolarForecast'
-import { ConsumptionChart, MonthlyComparisonChart, TemperatureChart, CorrelationChart } from '@/components/Charts'
+import { ConsumptionTemperatureChart, MonthlyComparisonChart, CorrelationChart } from '@/components/Charts'
 
 interface StatsData {
   currentMonth: {
@@ -102,12 +102,9 @@ export default function DashboardPage() {
 
         <SolarForecast />
 
-        <ConsumptionChart data={stats.allReadings} />
+        <ConsumptionTemperatureChart data={stats.allReadings} />
 
-        <div className="grid gap-4 lg:grid-cols-2">
-          <TemperatureChart data={stats.allReadings} />
-          <CorrelationChart data={stats.allReadings} />
-        </div>
+        <CorrelationChart data={stats.allReadings} />
 
         <MonthlyComparisonChart data={stats.monthlySummaries} />
       </main>
