@@ -48,9 +48,10 @@ export default function StatistikPage() {
     return (
       <>
         <Navigation />
-        <main className="mx-auto max-w-6xl px-4 py-6">
-          <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+        <main className="mx-auto max-w-6xl px-4 py-8">
+          <div className="flex flex-col items-center justify-center gap-4 py-24">
+            <div className="spinner-amber h-8 w-8" />
+            <p className="section-label">Laden…</p>
           </div>
         </main>
       </>
@@ -66,77 +67,102 @@ export default function StatistikPage() {
   const monthsWithData = stats.monthlySummaries.length
   const projectedAnnual = monthsWithData > 0 ? (totalHpCost / monthsWithData) * 12 : 0
 
+  const summaryCards = [
+    { label: 'Gesamt kWh', value: `${Math.round(totalKwh)}`, accent: '#3b82f6', color: 'text-blue-400' },
+    { label: 'WP-Kosten gesamt', value: `${totalHpCost.toFixed(0)} €`, accent: '#3b82f6', color: 'text-blue-400' },
+    { label: 'Gas-Kosten (Vergleich)', value: `${totalGasCost.toFixed(0)} €`, accent: '#f97316', color: 'text-orange-400' },
+    {
+      label: 'Ersparnis',
+      value: `${savings > 0 ? '+' : ''}${savings.toFixed(0)} €`,
+      accent: savings > 0 ? '#34d399' : '#f87171',
+      color: savings > 0 ? 'text-emerald-400' : 'text-red-400',
+    },
+  ]
+
   return (
     <>
       <Navigation />
-      <main className="mx-auto max-w-6xl space-y-4 px-4 py-6">
-        <h1 className="text-xl font-bold">Statistik</h1>
+      <main className="mx-auto max-w-6xl space-y-5 px-4 py-8">
+
+        {/* Header */}
+        <div className="animate-fade-in">
+          <h1 className="page-title">Statistik</h1>
+          <p className="section-label mt-1">Auswertung & Vergleich</p>
+        </div>
 
         {/* Summary cards */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="card">
-            <p className="text-xs text-[#8b8fa3]">Gesamt kWh</p>
-            <p className="text-xl font-bold text-blue-400">{Math.round(totalKwh)}</p>
-          </div>
-          <div className="card">
-            <p className="text-xs text-[#8b8fa3]">Gesamt WP-Kosten</p>
-            <p className="text-xl font-bold text-blue-400">{totalHpCost.toFixed(0)} €</p>
-          </div>
-          <div className="card">
-            <p className="text-xs text-[#8b8fa3]">Gas-Kosten (Vergleich)</p>
-            <p className="text-xl font-bold text-orange-400">{totalGasCost.toFixed(0)} €</p>
-          </div>
-          <div className="card">
-            <p className="text-xs text-[#8b8fa3]">Ersparnis</p>
-            <p className={`text-xl font-bold ${savings > 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {savings > 0 ? '+' : ''}{savings.toFixed(0)} €
-            </p>
-          </div>
+          {summaryCards.map((c, i) => (
+            <div
+              key={i}
+              className={`card anim-${i + 1}`}
+              style={{ '--accent': c.accent } as React.CSSProperties}
+            >
+              <p className="section-label mb-3">{c.label}</p>
+              <p className={`stat-value text-2xl font-bold ${c.color}`}>{c.value}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Price and projection */}
+        {/* Price & projection */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="card">
-            <p className="text-xs text-[#8b8fa3]">Strompreis</p>
-            <p className="text-lg font-bold text-white">{stats.pricePerKwh.toFixed(4)} €/kWh</p>
+          <div className="card" style={{ '--accent': '#6366f1' } as React.CSSProperties}>
+            <p className="section-label mb-3">Strompreis</p>
+            <p className="stat-value text-xl font-bold text-indigo-400">{stats.pricePerKwh.toFixed(4)} €/kWh</p>
           </div>
-          <div className="card">
-            <p className="text-xs text-[#8b8fa3]">Hochrechnung (Jahr)</p>
-            <p className="text-lg font-bold text-yellow-400">{projectedAnnual.toFixed(0)} €</p>
+          <div className="card" style={{ '--accent': '#f59e0b' } as React.CSSProperties}>
+            <p className="section-label mb-3">Hochrechnung (Jahr)</p>
+            <p className="stat-value text-xl font-bold text-amber-400">{projectedAnnual.toFixed(0)} €</p>
           </div>
         </div>
 
         {/* Monthly breakdown */}
         <div className="card overflow-x-auto">
-          <h2 className="mb-3 text-sm font-medium text-[#8b8fa3]">Monatsübersicht</h2>
+          <h2
+            className="mb-5 text-base font-bold"
+            style={{ fontFamily: 'var(--font-syne, system-ui)', letterSpacing: '-0.02em', color: '#eef0f8' }}
+          >
+            Monatsübersicht
+          </h2>
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#2a2e3f] text-left text-xs text-[#8b8fa3]">
-                <th className="pb-2 pr-3">Monat</th>
-                <th className="pb-2 pr-3 text-right">kWh</th>
-                <th className="pb-2 pr-3 text-right">Ø/Tag</th>
-                <th className="pb-2 pr-3 text-right">WP-Kosten</th>
-                <th className="pb-2 pr-3 text-right">Gas-Kosten</th>
-                <th className="pb-2 text-right">Differenz</th>
+              <tr
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}
+              >
+                {['Monat', 'kWh', 'Ø/Tag', 'WP-Kosten', 'Gas-Kosten', 'Differenz'].map(h => (
+                  <th
+                    key={h}
+                    className={`pb-3 text-xs font-semibold ${h !== 'Monat' ? 'text-right' : 'text-left'} pr-4 last:pr-0`}
+                    style={{ color: '#4a5670', letterSpacing: '0.08em', textTransform: 'uppercase' }}
+                  >
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {stats.monthlySummaries.map((m, i) => {
                 const diff = m.gas_comparison - m.total_cost
                 return (
-                  <tr key={i} className="border-b border-[#2a2e3f]/50 hover:bg-[#1e2130]">
-                    <td className="py-2 pr-3 text-xs">
+                  <tr
+                    key={i}
+                    className="transition-colors"
+                    style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.025)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = '')}
+                  >
+                    <td className="py-3 pr-4 text-xs" style={{ color: '#8892a4' }}>
                       {MONTHS_DE[m.month - 1]} {m.year}
                     </td>
-                    <td className="py-2 pr-3 text-right">{Math.round(m.kw_total)}</td>
-                    <td className="py-2 pr-3 text-right">
+                    <td className="stat-value py-3 pr-4 text-right text-xs">{Math.round(m.kw_total)}</td>
+                    <td className="stat-value py-3 pr-4 text-right text-xs" style={{ color: '#8892a4' }}>
                       {typeof m.avg_daily === 'number' && m.avg_daily < 100
                         ? m.avg_daily.toFixed(1)
                         : '–'}
                     </td>
-                    <td className="py-2 pr-3 text-right text-blue-400">{m.total_cost.toFixed(2)} €</td>
-                    <td className="py-2 pr-3 text-right text-orange-400">{m.gas_comparison.toFixed(2)} €</td>
-                    <td className={`py-2 text-right font-medium ${diff > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    <td className="stat-value py-3 pr-4 text-right text-xs text-blue-400">{m.total_cost.toFixed(2)} €</td>
+                    <td className="stat-value py-3 pr-4 text-right text-xs text-orange-400">{m.gas_comparison.toFixed(2)} €</td>
+                    <td className={`stat-value py-3 text-right text-xs font-semibold ${diff > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {diff > 0 ? '+' : ''}{diff.toFixed(2)} €
                     </td>
                   </tr>
@@ -144,13 +170,13 @@ export default function StatistikPage() {
               })}
             </tbody>
             <tfoot>
-              <tr className="border-t border-[#3b82f6]/30 font-medium">
-                <td className="pt-2 pr-3 text-xs">Gesamt</td>
-                <td className="pt-2 pr-3 text-right">{Math.round(totalKwh)}</td>
-                <td className="pt-2 pr-3 text-right">–</td>
-                <td className="pt-2 pr-3 text-right text-blue-400">{totalHpCost.toFixed(2)} €</td>
-                <td className="pt-2 pr-3 text-right text-orange-400">{totalGasCost.toFixed(2)} €</td>
-                <td className={`pt-2 text-right ${savings > 0 ? 'text-green-400' : 'text-red-400'}`}>
+              <tr style={{ borderTop: '1px solid rgba(59,130,246,0.2)' }}>
+                <td className="pt-3 pr-4 text-xs font-semibold" style={{ color: '#8892a4' }}>Gesamt</td>
+                <td className="stat-value pt-3 pr-4 text-right text-xs font-semibold">{Math.round(totalKwh)}</td>
+                <td className="pt-3 pr-4 text-right text-xs" style={{ color: '#4a5670' }}>–</td>
+                <td className="stat-value pt-3 pr-4 text-right text-xs font-semibold text-blue-400">{totalHpCost.toFixed(2)} €</td>
+                <td className="stat-value pt-3 pr-4 text-right text-xs font-semibold text-orange-400">{totalGasCost.toFixed(2)} €</td>
+                <td className={`stat-value pt-3 text-right text-xs font-semibold ${savings > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                   {savings > 0 ? '+' : ''}{savings.toFixed(2)} €
                 </td>
               </tr>
@@ -161,18 +187,35 @@ export default function StatistikPage() {
         {/* Yearly stats */}
         {stats.yearlyStats && stats.yearlyStats.length > 0 && (
           <div className="card">
-            <h2 className="mb-3 text-sm font-medium text-[#8b8fa3]">Jahresvergleich</h2>
+            <h2
+              className="mb-5 text-base font-bold"
+              style={{ fontFamily: 'var(--font-syne, system-ui)', letterSpacing: '-0.02em', color: '#eef0f8' }}
+            >
+              Jahresvergleich
+            </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {stats.yearlyStats.map((y, i) => (
-                <div key={i} className="rounded-lg border border-[#2a2e3f] p-3">
-                  <p className="text-lg font-bold">{y.year}</p>
-                  <p className="text-sm text-[#8b8fa3]">
+                <div
+                  key={i}
+                  className="rounded-xl p-4 transition-all"
+                  style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                  }}
+                >
+                  <p
+                    className="text-xl font-bold text-white"
+                    style={{ fontFamily: 'var(--font-syne, system-ui)', letterSpacing: '-0.02em' }}
+                  >
+                    {y.year}
+                  </p>
+                  <p className="mt-1 text-xs" style={{ color: '#6b7a96' }}>
                     {Math.round(y.total_kwh)} kWh in {y.days} Tagen
                   </p>
-                  <p className="text-sm text-[#8b8fa3]">
+                  <p className="text-xs" style={{ color: '#6b7a96' }}>
                     Ø {y.avg_daily.toFixed(1)} kWh/Tag
                   </p>
-                  <p className="text-sm text-blue-400">
+                  <p className="stat-value mt-2 text-sm font-semibold text-blue-400">
                     {(y.total_kwh * stats.pricePerKwh).toFixed(2)} €
                   </p>
                 </div>
@@ -180,6 +223,7 @@ export default function StatistikPage() {
             </div>
           </div>
         )}
+
       </main>
     </>
   )

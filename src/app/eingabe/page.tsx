@@ -51,7 +51,10 @@ export default function EingabePage() {
     <>
       <Navigation />
       <main className="mx-auto max-w-2xl space-y-4 px-4 py-6">
-        <h1 className="text-xl font-bold">Daten Eingabe</h1>
+        <div className="animate-fade-in">
+          <h1 className="page-title">Daten Eingabe</h1>
+          <p className="section-label mt-1">Zählerstand erfassen</p>
+        </div>
 
         <OCRUpload onResult={handleOCRResult} />
 

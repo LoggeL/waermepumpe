@@ -25,6 +25,19 @@ interface MonthlySummary {
 
 const MONTHS_DE = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
 
+const GRID_COLOR = 'rgba(255,255,255,0.05)'
+const AXIS_COLOR = 'rgba(255,255,255,0.18)'
+const TICK_STYLE = { fill: '#4a5670', fontFamily: 'var(--font-mono, monospace)', fontSize: 10 }
+const TOOLTIP_STYLE = {
+  backgroundColor: '#0d1019',
+  border: '1px solid rgba(255,255,255,0.1)',
+  borderRadius: '10px',
+  color: '#eef0f8',
+  fontFamily: 'var(--font-outfit, system-ui)',
+  fontSize: '12px',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+}
+
 function formatDate(d: string) {
   const parts = d.split('-')
   return `${parts[2]}.${parts[1]}.`
@@ -52,30 +65,44 @@ export function ConsumptionTemperatureChart({ data }: { data: Reading[] }) {
 
   return (
     <div className="card">
-      <h3 className="mb-4 text-sm font-medium text-[#8b8fa3]">Tagesverbrauch & Temperatur</h3>
+      <h3
+        className="mb-5 text-base font-bold"
+        style={{ fontFamily: 'var(--font-syne, system-ui)', letterSpacing: '-0.02em', color: '#eef0f8' }}
+      >
+        Tagesverbrauch &amp; Temperatur
+      </h3>
       <ResponsiveContainer width="100%" height={320}>
         <ComposedChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#2a2e3f" />
-          <XAxis dataKey="date" stroke="#555" fontSize={11} tick={{ fill: '#8b8fa3' }} />
-          <YAxis yAxisId="left" stroke="#555" fontSize={11} tick={{ fill: '#8b8fa3' }} label={{ value: 'kWh', angle: -90, position: 'insideLeft', fill: '#8b8fa3', fontSize: 11 }} />
-          <YAxis yAxisId="right" orientation="right" stroke="#555" fontSize={11} tick={{ fill: '#8b8fa3' }} label={{ value: '°C', angle: 90, position: 'insideRight', fill: '#8b8fa3', fontSize: 11 }} />
-          <Tooltip
-            contentStyle={{ backgroundColor: '#1a1d27', border: '1px solid #2a2e3f', borderRadius: '8px', color: '#e4e6ed' }}
+          <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} />
+          <XAxis dataKey="date" stroke={AXIS_COLOR} tick={TICK_STYLE} />
+          <YAxis
+            yAxisId="left"
+            stroke={AXIS_COLOR}
+            tick={TICK_STYLE}
+            label={{ value: 'kWh', angle: -90, position: 'insideLeft', fill: '#4a5670', fontSize: 10 }}
           />
-          <Legend wrapperStyle={{ fontSize: '12px' }} />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            stroke={AXIS_COLOR}
+            tick={TICK_STYLE}
+            label={{ value: '°C', angle: 90, position: 'insideRight', fill: '#4a5670', fontSize: 10 }}
+          />
+          <Tooltip contentStyle={TOOLTIP_STYLE} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#6b7a96' }} />
           {hasToday && (
             <ReferenceLine
               x={todayLabel}
               yAxisId="left"
-              stroke="#8b8fa3"
-              strokeDasharray="6 4"
+              stroke="rgba(245,158,11,0.4)"
+              strokeDasharray="5 4"
               strokeWidth={1.5}
-              label={{ value: 'Heute', position: 'top', fill: '#8b8fa3', fontSize: 11 }}
+              label={{ value: 'Heute', position: 'top', fill: '#f59e0b', fontSize: 10, fontWeight: 600 }}
             />
           )}
-          <Bar yAxisId="left" dataKey="kWh" fill="#3b82f6" opacity={0.7} radius={[2, 2, 0, 0]} />
-          <Line yAxisId="right" type="monotone" dataKey="Temp Max" stroke="#ef4444" strokeWidth={2} dot={false} />
-          <Line yAxisId="right" type="monotone" dataKey="Temp Min" stroke="#06b6d4" strokeWidth={2} dot={false} />
+          <Bar yAxisId="left" dataKey="kWh" fill="#3b82f6" fillOpacity={0.75} radius={[3, 3, 0, 0]} />
+          <Line yAxisId="right" type="monotone" dataKey="Temp Max" stroke="#f87171" strokeWidth={2} dot={false} />
+          <Line yAxisId="right" type="monotone" dataKey="Temp Min" stroke="#22d3ee" strokeWidth={2} dot={false} />
         </ComposedChart>
       </ResponsiveContainer>
     </div>
@@ -91,19 +118,31 @@ export function MonthlyComparisonChart({ data }: { data: MonthlySummary[] }) {
 
   return (
     <div className="card">
-      <h3 className="mb-4 text-sm font-medium text-[#8b8fa3]">Kostenvergleich: Wärmepumpe vs. Gas</h3>
+      <h3
+        className="mb-5 text-base font-bold"
+        style={{ fontFamily: 'var(--font-syne, system-ui)', letterSpacing: '-0.02em', color: '#eef0f8' }}
+      >
+        Kostenvergleich: Wärmepumpe vs. Gas
+      </h3>
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#2a2e3f" />
-          <XAxis dataKey="month" stroke="#555" fontSize={10} tick={{ fill: '#8b8fa3' }} angle={-45} textAnchor="end" height={60} />
-          <YAxis stroke="#555" fontSize={11} tick={{ fill: '#8b8fa3' }} />
+          <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} />
+          <XAxis
+            dataKey="month"
+            stroke={AXIS_COLOR}
+            tick={TICK_STYLE}
+            angle={-45}
+            textAnchor="end"
+            height={60}
+          />
+          <YAxis stroke={AXIS_COLOR} tick={TICK_STYLE} />
           <Tooltip
-            contentStyle={{ backgroundColor: '#1a1d27', border: '1px solid #2a2e3f', borderRadius: '8px', color: '#e4e6ed' }}
+            contentStyle={TOOLTIP_STYLE}
             formatter={(v: number) => `${v.toFixed(2)} €`}
           />
-          <Legend wrapperStyle={{ fontSize: '12px' }} />
-          <Bar dataKey="Wärmepumpe" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Gas (Vorjahr)" fill="#f97316" radius={[4, 4, 0, 0]} />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#6b7a96' }} />
+          <Bar dataKey="Wärmepumpe" fill="#3b82f6" fillOpacity={0.85} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Gas (Vorjahr)" fill="#f97316" fillOpacity={0.85} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -120,18 +159,38 @@ export function CorrelationChart({ data }: { data: Reading[] }) {
 
   return (
     <div className="card">
-      <h3 className="mb-4 text-sm font-medium text-[#8b8fa3]">Korrelation: Temperatur vs. Verbrauch</h3>
+      <h3
+        className="mb-5 text-base font-bold"
+        style={{ fontFamily: 'var(--font-syne, system-ui)', letterSpacing: '-0.02em', color: '#eef0f8' }}
+      >
+        Korrelation: Temperatur vs. Verbrauch
+      </h3>
       <ResponsiveContainer width="100%" height={280}>
         <ScatterChart>
-          <CartesianGrid strokeDasharray="3 3" stroke="#2a2e3f" />
-          <XAxis dataKey="temp" name="Durchschnittstemp." unit="°C" stroke="#555" fontSize={11} tick={{ fill: '#8b8fa3' }} />
-          <YAxis dataKey="kWh" name="Verbrauch" unit=" kWh" stroke="#555" fontSize={11} tick={{ fill: '#8b8fa3' }} />
-          <ZAxis range={[40, 40]} />
-          <Tooltip
-            contentStyle={{ backgroundColor: '#1a1d27', border: '1px solid #2a2e3f', borderRadius: '8px', color: '#e4e6ed' }}
-            formatter={(v: number, name: string) => [name === 'kWh' ? `${v} kWh` : `${v}°C`, name === 'kWh' ? 'Verbrauch' : 'Temperatur']}
+          <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} />
+          <XAxis
+            dataKey="temp"
+            name="Durchschnittstemp."
+            unit="°C"
+            stroke={AXIS_COLOR}
+            tick={TICK_STYLE}
           />
-          <Scatter data={chartData} fill="#22c55e" />
+          <YAxis
+            dataKey="kWh"
+            name="Verbrauch"
+            unit=" kWh"
+            stroke={AXIS_COLOR}
+            tick={TICK_STYLE}
+          />
+          <ZAxis range={[45, 45]} />
+          <Tooltip
+            contentStyle={TOOLTIP_STYLE}
+            formatter={(v: number, name: string) => [
+              name === 'kWh' ? `${v} kWh` : `${v}°C`,
+              name === 'kWh' ? 'Verbrauch' : 'Temperatur',
+            ]}
+          />
+          <Scatter data={chartData} fill="#34d399" fillOpacity={0.75} />
         </ScatterChart>
       </ResponsiveContainer>
     </div>

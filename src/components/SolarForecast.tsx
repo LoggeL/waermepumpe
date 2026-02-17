@@ -22,6 +22,19 @@ interface SolarData {
   }
 }
 
+const GRID_COLOR = 'rgba(255,255,255,0.05)'
+const AXIS_COLOR = 'rgba(255,255,255,0.18)'
+const TICK_STYLE = { fill: '#4a5670', fontFamily: 'var(--font-mono, monospace)', fontSize: 10 }
+const TOOLTIP_STYLE = {
+  backgroundColor: '#0d1019',
+  border: '1px solid rgba(255,255,255,0.1)',
+  borderRadius: '10px',
+  color: '#eef0f8',
+  fontFamily: 'var(--font-outfit, system-ui)',
+  fontSize: '12px',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+}
+
 function formatDate(d: string) {
   const parts = d.split('-')
   return `${parts[2]}.${parts[1]}.${parts[0]}`
@@ -70,18 +83,16 @@ export default function SolarForecast() {
     fetchSolar(offset)
   }
 
-  // Sunshine quality indicator
   const sunQuality = data
     ? data.sunshineHours >= 8
-      ? { label: 'Sehr gut', color: 'text-yellow-400' }
+      ? { label: 'Sehr gut', color: '#fbbf24' }
       : data.sunshineHours >= 5
-        ? { label: 'Gut', color: 'text-yellow-500' }
+        ? { label: 'Gut', color: '#f59e0b' }
         : data.sunshineHours >= 2
-          ? { label: 'Mäßig', color: 'text-orange-400' }
-          : { label: 'Gering', color: 'text-gray-400' }
+          ? { label: 'Mäßig', color: '#f97316' }
+          : { label: 'Gering', color: '#6b7a96' }
     : null
 
-  // Build hourly chart data (daytime hours only: 6-20)
   const hourlyChart = data
     ? data.hourly.hours
         .map((h, i) => ({
@@ -92,33 +103,59 @@ export default function SolarForecast() {
         .slice(6, 21)
     : []
 
-  // Current hour label for "Jetzt" reference line (only for today)
   const currentHourLabel = data?.isToday ? `${new Date().getHours()}:00` : null
 
   return (
-    <div className="card space-y-4">
-      {/* Day selector */}
+    <div className="card space-y-5">
+      {/* Header row */}
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-[#8b8fa3]">
-          Sonnenprognose{data ? ` (${formatDate(data.date)})` : ''}
-        </h3>
+        <div>
+          <h3
+            className="text-base font-bold text-white"
+            style={{ fontFamily: 'var(--font-syne, system-ui)', letterSpacing: '-0.02em' }}
+          >
+            Sonnenprognose
+          </h3>
+          {data && (
+            <p className="section-label mt-0.5">{formatDate(data.date)}</p>
+          )}
+        </div>
         {sunQuality && (
-          <span className={`text-xs font-medium ${sunQuality.color}`}>
+          <span
+            className="rounded-lg px-2.5 py-1 text-xs font-semibold"
+            style={{
+              color: sunQuality.color,
+              background: `${sunQuality.color}18`,
+              border: `1px solid ${sunQuality.color}35`,
+              letterSpacing: '0.04em',
+            }}
+          >
             {sunQuality.label}
           </span>
         )}
       </div>
 
+      {/* Day selector */}
       <div className="flex gap-2">
         {DAY_LABELS.map((label, i) => (
           <button
             key={i}
             onClick={() => handleDayClick(i)}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+            className="rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
+            style={
               selectedDay === i
-                ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/40'
-                : 'border border-[#2a2e3f] text-[#8b8fa3] hover:border-yellow-500/30 hover:text-yellow-400'
-            }`}
+                ? {
+                    background: 'rgba(245,158,11,0.1)',
+                    border: '1px solid rgba(245,158,11,0.35)',
+                    color: '#fbbf24',
+                    boxShadow: '0 0 12px rgba(245,158,11,0.08)',
+                  }
+                : {
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    color: '#6b7a96',
+                  }
+            }
           >
             {label}
           </button>
@@ -126,70 +163,69 @@ export default function SolarForecast() {
       </div>
 
       {loading && (
-        <div className="flex items-center justify-center py-8">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-yellow-500 border-t-transparent" />
+        <div className="flex flex-col items-center justify-center gap-3 py-10">
+          <div className="spinner-amber h-6 w-6" />
+          <p className="section-label">Prognose wird geladen…</p>
         </div>
       )}
 
       {!loading && error && (
-        <p className="text-sm text-red-400">{error}</p>
+        <p className="text-sm" style={{ color: '#f87171' }}>{error}</p>
       )}
 
       {!loading && !error && data && (
         <>
           {/* Key metrics */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-lg border border-[#2a2e3f] bg-[#0f1117] p-3">
-              <p className="text-xs text-[#8b8fa3]">Sonnenstunden</p>
-              <p className="text-xl font-bold text-yellow-400">{data.sunshineHours}h</p>
-            </div>
-            <div className="rounded-lg border border-[#2a2e3f] bg-[#0f1117] p-3">
-              <p className="text-xs text-[#8b8fa3]">Strahlung</p>
-              <p className="text-xl font-bold text-orange-400">{data.radiationSum} <span className="text-xs font-normal">MJ/m²</span></p>
-            </div>
-            <div className="rounded-lg border border-[#2a2e3f] bg-[#0f1117] p-3">
-              <p className="text-xs text-[#8b8fa3]">Bewölkung (tags)</p>
-              <p className="text-xl font-bold text-blue-300">{data.avgCloudCover}%</p>
-            </div>
-            <div className="rounded-lg border border-[#2a2e3f] bg-[#0f1117] p-3">
-              <p className="text-xs text-[#8b8fa3]">Solar-Ertrag (gesch.)</p>
-              <p className="text-xl font-bold text-green-400">{data.estimatedYieldKwh} <span className="text-xs font-normal">kWh</span></p>
-            </div>
+            {[
+              { label: 'Sonnenstunden', value: `${data.sunshineHours}h`, color: '#fbbf24', bg: 'rgba(251,191,36,0.07)', border: 'rgba(251,191,36,0.18)' },
+              { label: 'Strahlung', value: `${data.radiationSum}`, unit: 'MJ/m²', color: '#f97316', bg: 'rgba(249,115,22,0.07)', border: 'rgba(249,115,22,0.18)' },
+              { label: 'Bewölkung', value: `${data.avgCloudCover}%`, color: '#60a5fa', bg: 'rgba(96,165,250,0.07)', border: 'rgba(96,165,250,0.18)' },
+              { label: 'Solar-Ertrag (gesch.)', value: `${data.estimatedYieldKwh}`, unit: 'kWh', color: '#34d399', bg: 'rgba(52,211,153,0.07)', border: 'rgba(52,211,153,0.18)' },
+            ].map((m, i) => (
+              <div
+                key={i}
+                className="rounded-xl p-3"
+                style={{ background: m.bg, border: `1px solid ${m.border}` }}
+              >
+                <p className="section-label mb-2">{m.label}</p>
+                <p className="stat-value text-xl font-bold" style={{ color: m.color }}>
+                  {m.value}
+                  {m.unit && <span className="text-xs font-normal opacity-60 ml-1">{m.unit}</span>}
+                </p>
+              </div>
+            ))}
           </div>
 
           {/* Hourly chart */}
           <div>
-            <p className="mb-2 text-xs text-[#8b8fa3]">Stundenverlauf (Strahlung & Bewölkung)</p>
+            <p className="section-label mb-3">Stundenverlauf — Strahlung &amp; Bewölkung</p>
             <ResponsiveContainer width="100%" height={200}>
               <ComposedChart data={hourlyChart}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2a2e3f" />
-                <XAxis dataKey="hour" stroke="#555" fontSize={10} tick={{ fill: '#8b8fa3' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} />
+                <XAxis dataKey="hour" stroke={AXIS_COLOR} tick={TICK_STYLE} />
                 <YAxis
                   yAxisId="left"
-                  stroke="#555"
-                  fontSize={10}
-                  tick={{ fill: '#8b8fa3' }}
-                  label={{ value: 'W/m²', angle: -90, position: 'insideLeft', fill: '#8b8fa3', fontSize: 10 }}
+                  stroke={AXIS_COLOR}
+                  tick={TICK_STYLE}
+                  label={{ value: 'W/m²', angle: -90, position: 'insideLeft', fill: '#4a5670', fontSize: 10 }}
                 />
                 <YAxis
                   yAxisId="right"
                   orientation="right"
                   domain={[0, 100]}
-                  stroke="#555"
-                  fontSize={10}
-                  tick={{ fill: '#8b8fa3' }}
-                  label={{ value: '%', angle: 90, position: 'insideRight', fill: '#8b8fa3', fontSize: 10 }}
+                  stroke={AXIS_COLOR}
+                  tick={TICK_STYLE}
+                  label={{ value: '%', angle: 90, position: 'insideRight', fill: '#4a5670', fontSize: 10 }}
                 />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#1a1d27', border: '1px solid #2a2e3f', borderRadius: '8px', color: '#e4e6ed' }}
-                />
+                <Tooltip contentStyle={TOOLTIP_STYLE} />
                 {currentHourLabel && (
                   <ReferenceLine
                     x={currentHourLabel}
                     yAxisId="left"
-                    stroke="#f97316"
+                    stroke="rgba(249,115,22,0.6)"
                     strokeWidth={2}
-                    label={{ value: 'Jetzt', position: 'top', fill: '#f97316', fontSize: 11, fontWeight: 600 }}
+                    label={{ value: 'Jetzt', position: 'top', fill: '#f97316', fontSize: 10, fontWeight: 700 }}
                   />
                 )}
                 <Area
@@ -197,26 +233,34 @@ export default function SolarForecast() {
                   type="monotone"
                   dataKey="Bewölkung %"
                   fill="#3b82f6"
-                  fillOpacity={0.15}
+                  fillOpacity={0.12}
                   stroke="#3b82f6"
-                  strokeWidth={1}
+                  strokeWidth={1.5}
+                  strokeOpacity={0.7}
                 />
                 <Bar
                   yAxisId="left"
                   dataKey="Strahlung W/m²"
                   fill="#f59e0b"
-                  radius={[2, 2, 0, 0]}
-                  opacity={0.8}
+                  fillOpacity={0.8}
+                  radius={[3, 3, 0, 0]}
                 />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Extra details */}
-          <div className="flex gap-4 text-xs text-[#8b8fa3]">
-            <span>Spitze: {data.peakRadiation} W/m²</span>
-            <span>UV-Index max: {data.uvMax}</span>
-            <span>Standort: Kindenheim</span>
+          {/* Footer details */}
+          <div className="flex flex-wrap gap-4">
+            {[
+              { label: 'Spitze', value: `${data.peakRadiation} W/m²` },
+              { label: 'UV-Index max', value: `${data.uvMax}` },
+              { label: 'Standort', value: 'Kindenheim' },
+            ].map((item, i) => (
+              <div key={i} className="flex items-baseline gap-1.5">
+                <span className="section-label">{item.label}</span>
+                <span className="stat-value text-xs font-medium" style={{ color: '#8892a4' }}>{item.value}</span>
+              </div>
+            ))}
           </div>
         </>
       )}

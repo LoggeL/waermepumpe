@@ -55,9 +55,10 @@ export default function DashboardPage() {
     return (
       <>
         <Navigation />
-        <main className="mx-auto max-w-6xl px-4 py-6">
-          <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+        <main className="mx-auto max-w-6xl px-4 py-8">
+          <div className="flex flex-col items-center justify-center gap-4 py-24">
+            <div className="spinner-amber h-8 w-8" />
+            <p className="section-label">Laden…</p>
           </div>
         </main>
       </>
@@ -66,38 +67,56 @@ export default function DashboardPage() {
 
   if (!stats) return null
 
+  const avgTemp = stats.currentMonth.avgTemp ?? 0
+
   const cards = [
     {
       label: 'Monat kWh',
       value: `${stats.currentMonth.kw}`,
       sub: `${stats.currentMonth.days} Tage`,
       color: stats.currentMonth.kw > 500 ? 'text-orange-400' : 'text-blue-400',
+      accent: stats.currentMonth.kw > 500 ? '#f97316' : '#3b82f6',
     },
     {
       label: 'Kosten (Monat)',
       value: `${stats.currentMonth.cost.toFixed(0)} €`,
       sub: `${stats.pricePerKwh.toFixed(4)} €/kWh`,
-      color: stats.currentMonth.cost > 200 ? 'text-red-400' : 'text-green-400',
+      color: stats.currentMonth.cost > 200 ? 'text-red-400' : 'text-emerald-400',
+      accent: stats.currentMonth.cost > 200 ? '#f87171' : '#34d399',
     },
     {
       label: 'Ø Tagesverbrauch',
       value: `${stats.currentMonth.avgDaily} kWh`,
       sub: 'aktueller Monat',
-      color: stats.currentMonth.avgDaily > 25 ? 'text-orange-400' : 'text-green-400',
+      color: stats.currentMonth.avgDaily > 25 ? 'text-orange-400' : 'text-emerald-400',
+      accent: stats.currentMonth.avgDaily > 25 ? '#f97316' : '#34d399',
     },
     {
       label: 'Ø Temperatur',
       value: stats.currentMonth.avgTemp != null ? `${stats.currentMonth.avgTemp}°C` : '–',
       sub: 'Durchschnitt',
-      color: (stats.currentMonth.avgTemp ?? 0) < 0 ? 'text-cyan-400' : 'text-yellow-400',
+      color: avgTemp < 0 ? 'text-cyan-400' : 'text-amber-400',
+      accent: avgTemp < 0 ? '#22d3ee' : '#f59e0b',
     },
   ]
 
   return (
     <>
       <Navigation />
-      <main className="mx-auto max-w-6xl space-y-4 px-4 py-6">
-        <h1 className="text-xl font-bold">Übersicht</h1>
+      <main className="mx-auto max-w-6xl space-y-5 px-4 py-8">
+
+        {/* Page header */}
+        <div className="animate-fade-in flex items-end justify-between">
+          <div>
+            <h1 className="page-title">Übersicht</h1>
+            <p className="section-label mt-1">Energiemonitoring</p>
+          </div>
+          <div className="flex items-center gap-2 pb-0.5">
+            <span className="live-dot" />
+            <span className="section-label">Live</span>
+          </div>
+        </div>
+
         <DashboardCards cards={cards} />
 
         <SolarForecast />
@@ -107,6 +126,7 @@ export default function DashboardPage() {
         <CorrelationChart data={stats.allReadings} />
 
         <MonthlyComparisonChart data={stats.monthlySummaries} />
+
       </main>
     </>
   )
