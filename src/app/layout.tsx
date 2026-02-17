@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from 'next'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Wärmepumpe Dashboard',
   description: 'Energiemonitoring für Wärmepumpe & Solar',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export const viewport: Viewport = {

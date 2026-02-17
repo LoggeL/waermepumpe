@@ -2,11 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChartLine, faPenToSquare, faChartBar } from '@fortawesome/free-solid-svg-icons'
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-const links = [
-  { href: '/', label: 'Dashboard', icon: '📊' },
-  { href: '/eingabe', label: 'Eingabe', icon: '✏️' },
-  { href: '/statistik', label: 'Statistik', icon: '📈' },
+const links: { href: string; label: string; icon: IconDefinition }[] = [
+  { href: '/', label: 'Dashboard', icon: faChartLine },
+  { href: '/eingabe', label: 'Eingabe', icon: faPenToSquare },
+  { href: '/statistik', label: 'Statistik', icon: faChartBar },
 ]
 
 export default function Navigation() {
@@ -29,7 +32,7 @@ export default function Navigation() {
                   : 'text-[#8b8fa3] hover:bg-[#1a1d27] hover:text-white'
               }`}
             >
-              <span className="mr-1 hidden sm:inline">{link.icon}</span>
+              <FontAwesomeIcon icon={link.icon} className="mr-1.5 hidden w-3.5 sm:inline-block" />
               {link.label}
             </Link>
           ))}
