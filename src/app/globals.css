@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #0f1117;
+  color: #e4e6ed;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0f1117; }
+::-webkit-scrollbar-thumb { background: #2a2e3f; border-radius: 3px; }
+
+.card {
+  @apply rounded-xl border border-[#2a2e3f] bg-[#1a1d27] p-5;
+  background: linear-gradient(135deg, #1a1d27 0%, #1e2130 100%);
+}
+
+.card-hover {
+  @apply transition-all duration-200;
+}
+.card-hover:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+.input-dark {
+  @apply w-full rounded-lg border border-[#2a2e3f] bg-[#0f1117] px-4 py-3 text-[#e4e6ed] placeholder-[#555] outline-none transition-colors;
+}
+.input-dark:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.btn-primary {
+  @apply rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-all;
+}
+.btn-primary:hover {
+  @apply bg-blue-500;
+}
+.btn-primary:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.btn-secondary {
+  @apply rounded-lg border border-[#2a2e3f] bg-[#1a1d27] px-4 py-2 text-sm text-[#8b8fa3] transition-all;
+}
+.btn-secondary:hover {
+  @apply border-[#3b82f6] text-white;
+}

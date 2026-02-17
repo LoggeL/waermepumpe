@@ -1,0 +1,44 @@
+{
+  "title": "Wärmepumpe - Solar-Strom Tracking",
+  "daily_readings": [
+    {"date": "2026-02-01", "meter_hp": 2423, "meter_elec": 104171, "weather": "2;-4"},
+    {"date": "2026-02-02", "meter_hp": 2450, "meter_elec": 104198, "weather": "1;-2"},
+    {"date": "2026-02-03", "meter_hp": 2480, "meter_elec": 104228, "weather": "0;-2"},
+    {"date": "2026-02-04", "meter_hp": 2517, "meter_elec": 104269, "weather": "0;0"},
+    {"date": "2026-02-05", "meter_hp": 2547, "meter_elec": 104292, "weather": "0;-1"},
+    {"date": "2026-02-06", "meter_hp": 2577, "meter_elec": 104260, "weather": "0;-1"},
+    {"date": "2026-02-07", "meter_hp": 2598, "meter_elec": 104243, "weather": "1;-6"},
+    {"date": "2026-02-08", "meter_hp": 2620, "meter_elec": 104238, "weather": "1;-8"},
+    {"date": "2026-02-09", "meter_hp": 2644, "meter_elec": 104218, "weather": "1;-5"},
+    {"date": "2026-02-10", "meter_hp": 2670, "meter_elec": 104196, "weather": "1;-4"},
+    {"date": "2026-02-11", "meter_hp": 2684, "meter_elec": 104187, "weather": "2;-9"},
+    {"date": "2026-02-12", "meter_hp": 2696, "meter_elec": 104183, "weather": "4;-9"},
+    {"date": "2026-02-13", "meter_hp": 2710, "meter_elec": 104179, "weather": "5;-8"},
+    {"date": "2026-02-14", "meter_hp": 2726, "meter_elec": 104172, "weather": "2;-8"},
+    {"date": "2026-02-15", "meter_hp": 2757, "meter_elec": 104143, "weather": "0;-3"},
+    {"date": "2026-02-16", "meter_hp": 2782, "meter_elec": 104129, "weather": "1;-5"},
+    {"date": "2026-02-17", "meter_hp": 2803, "meter_elec": 104115, "weather": "2;-5"}
+  ],
+  "monthly_summary": [
+    {"year": 2025, "month": 7, "kw_mo": 31, "kw_tag": 1.1, "euro_mo": 10.19, "mon_cost": 70},
+    {"year": 2025, "month": 8, "kw_mo": 30, "kw_tag": 1.1, "euro_mo": 9.86, "mon_cost": 70},
+    {"year": 2025, "month": 9, "kw_mo": 31, "kw_tag": 1.1, "euro_mo": 10.19, "mon_cost": 210},
+    {"year": 2025, "month": 10, "kw_mo": 180, "kw_tag": 5.8, "euro_mo": 59.18, "mon_cost": 630},
+    {"year": 2025, "month": 11, "kw_mo": 513, "kw_tag": 17.1, "euro_mo": 168.67, "mon_cost": 945},
+    {"year": 2025, "month": 12, "kw_mo": 698, "kw_tag": 22.5, "euro_mo": 229.50, "mon_cost": 1155},
+    {"year": 2026, "month": 1, "kw_mo": 940, "kw_tag": 30.3, "euro_mo": 309.07, "mon_cost": 1190},
+    {"year": 2026, "month": 2, "kw_mo": 380, "kw_tag": null, "euro_mo": 263.04, "mon_cost": 980},
+    {"year": 2026, "month": 3, "kw_mo": 735, "kw_tag": 735, "euro_mo": 241.67, "mon_cost": 735},
+    {"year": 2026, "month": 4, "kw_mo": 560, "kw_tag": 560, "euro_mo": 184.13, "mon_cost": 560},
+    {"year": 2026, "month": 5, "kw_mo": 315, "kw_tag": 315, "euro_mo": 103.57, "mon_cost": 315},
+    {"year": 2026, "month": 6, "kw_mo": 140, "kw_tag": 140, "euro_mo": 46.03, "mon_cost": 140}
+  ],
+  "gas_comparison": {
+    "gas_24_25": [29.22, 10.00, 15.30, 125.33, 199.01, 363.47, 377.35, 283.38, 221.44, 113.59, 95.43, 49.51],
+    "total_gas": 2027,
+    "total_hp": 1883,
+    "yearly_kwh": 4973,
+    "yearly_euro": 1635.12,
+    "price_per_kwh": 0.3288
+  }
+}
