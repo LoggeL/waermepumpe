@@ -167,7 +167,7 @@ export default function SolarForecast() {
       <div className="flex gap-4 text-xs text-[#8b8fa3]">
         <span>Spitze: {data.peakRadiation} W/m²</span>
         <span>UV-Index max: {data.uvMax}</span>
-        <span>Standort: Ramsen</span>
+        <span>Standort: Kindenheim</span>
       </div>
     </div>
   )

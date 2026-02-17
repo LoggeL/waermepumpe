@@ -113,9 +113,9 @@ function seedIfEmpty(db: Database.Database) {
     }
 
     insertSetting.run('price_per_kwh', String(seed.gas_comparison?.price_per_kwh || 0.3288))
-    insertSetting.run('latitude', '49.2667')
-    insertSetting.run('longitude', '8.1333')
-    insertSetting.run('location_name', 'Ramsen')
+    insertSetting.run('latitude', '49.5394')
+    insertSetting.run('longitude', '8.1936')
+    insertSetting.run('location_name', 'Kindenheim')
   })
 
   tx()

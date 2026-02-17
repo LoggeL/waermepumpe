@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-const LAT = 49.2667
-const LON = 8.1333
+const LAT = 49.5394
+const LON = 8.1936
 
 export async function GET() {
   try {
